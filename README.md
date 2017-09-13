@@ -7,7 +7,94 @@
 
 > Taqtile Danger-js Plugin
 
+## Environment
+
+Install correct yarn version
+
+```bash
+$ npm install -g yarn@`node -pe "require('./package.json').engines.yarn"`
+```
+Install dependencies
+
+```bash
+$ yarn install
+```
+
+## Adding new rules
+
+Add your rules to `src/rules` folder and its respective tests.
+
+When adding new rules, please follow current scope files for `pr`, `nodejs`, `android`, etc or create a new one in case your rule does not fit in any of the existing ones.
+
+## What is currently being checked
+
+### Common
+
+- [x] Fail when no description is provided
+- [x] Warns if description provided is too short
+- [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
+- [ ] `>>>` Strings to make sure rebase was successful
+- [x] Big PRs
+- [ ] Warn when `Gemfile` was modified and `Gemfile.lock` was not
+- [ ] Warn when Amazon Secret Key is hardcoded
+- [ ] Warn when `Dangerfile` was modified
+- [ ] Warn when `http://` is used
+
+### Node
+
+- [ ] Warn if some files/folders to be changed/committed like `yarn.lock`, `docker-compose.yml`, `Procfile`, `npm-shrinkwrap.json`, `node_modules`, `env.coffee`
+- [ ] Warn when `npm install -g` is used
+- [ ] Warn when `.env` or `.nvmrc` files are modified
+- [ ] Warn when `console.log` is added
+- [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
+- [ ] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
+- [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
+- [ ] [TypeScript] Warn if using `<any>` as return type.
+
+### iOS
+
+- [ ] Warn if some files/folders to be changed/committed like `Cakefile`, `settings.yml.erb`, `Fastfile`
+- [ ] Warn when `Podfile` was modified and `Podfile.lock` was not
+- [ ] Warn if changes made in Cakefile may 'break' provisionings and sign certificates configurations
+- [ ] Warn when ATS Exception is set in plist
+- [ ] Warn when Landscape orientation is set in plist
+- [ ] Warn when Facebook ID is hardcoded in plist
+- [ ] Warn when pod is being loaded from external git repos
+- [ ] Warn when `TODO` is added
+- [ ] Warn when `print(“”)` is added
+- [ ] Warn when `fatalError` is added
+- [ ] Warn if Podfile has pods should not using fixed versions
+- [ ] [Swift] Warn if forced unwrapping was found
+- [ ] Warn if hardcoded font is used in `.xib`
+- [ ] Warn if hardcoded color is used in `.xib`
+
+### Android
+
+- [ ] Warn when `.gradle` or `Manifest.xml` files are modified
+- [ ] Warn if there are hardcoded dimens different from `0dp` on `.xml` files
+- [ ] Warn if there are hardcoded colors on `.xml` files
+- [ ] Warn if there are hardcoded texts on `.xml` files
+- [ ] [Kotlin] Error when `!!` is found (similar to swift forced unwrap when `anything!` is found)
+- [ ] [Kotlin] Warn if using `Any` or `Any?` as return type
+- [ ] [Kotlin] Warn if `ButterKnife` or `findViewById` are found
+
+### Web
+
+- [ ] Warn if some files/folders to be changed/committed like `yarn.lock`, `docker-compose.yml`, `Procfile`, `npm-shrinkwrap.json`, `node_modules`, `env.coffee`
+- [ ] Warn when `npm install -g` is used
+- [ ] Warn when `.env` or `.nvmrc` files are modified
+- [ ] Warn when `console.log` is added
+- [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
+- [ ] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
+- [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
+- [ ] [TypeScript] Warn if using `<any>` as return type.
+- [ ] Warn if CSS files were changed
+
+
 ## Usage
+
+
+### For danger-js
 
 Install:
 
@@ -16,6 +103,31 @@ yarn add taqtile-dangerjs-plugin --dev
 ```
 
 At a glance:
+
+```js
+// dangerfile.js
+import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
+
+taqtileDangerjsPlugin()
+```
+
+### For peril
+
+Install:
+
+```sh
+yarn add taqtile-dangerjs-plugin --dev
+```
+
+Add plugin module to `json` settings:
+
+```json
+"settings": {
+  "modules": ["taqtile-dangerjs-plugin"]
+},
+  ```
+
+Use it in any peril dangerfile
 
 ```js
 // dangerfile.js
