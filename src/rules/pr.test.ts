@@ -24,9 +24,7 @@ describe('PR info', () => {
 
     pr.body();
 
-    expect(global.fail).toHaveBeenCalledWith(
-      'Please add a description to your PR.',
-    );
+    expect(global.fail).toHaveBeenCalledWith('Please add a description to your PR.');
   });
 
   it('Checks if PR has a lengthy body', () => {
@@ -36,9 +34,16 @@ describe('PR info', () => {
 
     pr.body();
 
-    expect(global.warn).toHaveBeenCalledWith(
-      'Your PR description is too short, please elaborate more.',
-    );
+    expect(global.warn).toHaveBeenCalledWith('Your PR description is too short, please elaborate more.');
   });
 
+  it('Checks if PR is too big', () => {
+    global.danger = {
+      github: { pr: { additions: 450, deletions: 150 } },
+    };
+
+    pr.size();
+
+    expect(global.warn).toHaveBeenCalledWith('Big PR!');
+  });
 });
