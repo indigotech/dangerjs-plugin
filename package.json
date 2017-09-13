@@ -19,7 +19,7 @@
     "taqtile",
     "typescript"
   ],
-  "version": "0.0.0-development",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
