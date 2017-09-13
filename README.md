@@ -9,7 +9,15 @@
 
 ## Environment
 
-Install correct yarn version
+- Use correct node version (from `.nvmrc file`)
+
+```bash
+$ nvm use
+```
+
+(If any error is found, install correct node versio via `$ nvm install`)
+
+- Install correct yarn version
 
 ```bash
 $ npm install -g yarn@`node -pe "require('./package.json').engines.yarn"`
