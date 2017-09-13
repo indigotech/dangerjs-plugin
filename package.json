@@ -23,7 +23,6 @@
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "build": "tsc",
