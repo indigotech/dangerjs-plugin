@@ -8,9 +8,10 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 /**
- * Taqtile Danger-js Plugin
+ * PR rules
  */
 export default {
+  /** Checks presence of PR description */
   body() {
     const body = danger.github.pr.body;
     if (!body) {
@@ -20,6 +21,7 @@ export default {
     }
   },
 
+  /** Warns if a PR is too big */
   size() {
     const pr = danger.github.pr;
     if (pr.additions + pr.deletions > 500) {
