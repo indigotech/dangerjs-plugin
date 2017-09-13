@@ -9,6 +9,9 @@ export declare function markdown(message: string): void;
 // Taqtile rules
 import pr from './rules/pr';
 
+/**
+ * Taqtile Danger-js Plugin
+ */
 export default function taqtileDangerjsPlugin() {
   [pr].forEach((rule: any) => {
     Object

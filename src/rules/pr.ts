@@ -8,21 +8,25 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 /**
- * Taqtile Danger-js Plugin
+ * PR rules
  */
 export default {
+  /** Checks presence of PR description */
   body() {
     const body = danger.github.pr.body;
     if (!body) {
-      fail('Please add a description to your PR.');
+      fail('This PR does not have a description.');
     } else if (body.length < 10) {
-      warn('Your PR description is too short, please elaborate more.');
+      warn('This PR description seems too short.');
     }
   },
 
+  /** Warns if a PR is too big */
   size() {
     const pr = danger.github.pr;
-    if (pr.additions + pr.deletions > 500) {
+    if (pr.deletions - pr.additions > 200) {
+      message('🎉 Yay! Cheers for some code refactoring!');
+    } else if (pr.additions + pr.deletions > 500) {
       warn('Big PR!');
     }
   },

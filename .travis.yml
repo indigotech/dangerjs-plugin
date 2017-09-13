@@ -1,0 +1,12 @@
+language: node_js
+dist: trusty
+
+before_install:
+  - npm install -g yarn@`node -pe "require('./package.json').engines.yarn"`
+
+install:
+  - yarn install
+
+script:
+  - yarn test
+  - yarn lint
