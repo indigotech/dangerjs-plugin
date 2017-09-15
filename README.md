@@ -48,10 +48,12 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 - [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
 - [ ] `>>>` Strings to make sure rebase was successful
-- [ ] Warn when `Gemfile` was modified and `Gemfile.lock` was not
 - [ ] Warn when Amazon Secret Key is hardcoded
 - [ ] Warn when `Dangerfile` was modified
 - [ ] Warn when `http://` is used
+- [x] Warn when definition files were changes but their lockfile weren't:
+  - `Gemfile` vs `Gemfile.lock`
+  - `package.json` vs `yarn.lock`
 
 ### Node
 
