@@ -1,11 +1,10 @@
 import taqtileDangerjsPlugin from './index';
-import pr from './rules/pr';
+
+import * as rules from './rules';
 
 declare const global: any;
 
 describe('taqtileDangerjsPlugin()', () => {
-
-  const rules = [pr];
 
   beforeEach(() => {
     global.warn = jest.fn();
@@ -13,12 +12,10 @@ describe('taqtileDangerjsPlugin()', () => {
     global.fail = jest.fn();
     global.markdown = jest.fn();
 
-    rules.forEach((rule: any) => {
-      Object
-        .keys(rule)
-        .filter(property => rule.hasOwnProperty(property))
-        .forEach(property => rule[property] = jest.fn());
-    });
+    Object
+      .keys(rules)
+      .filter(property => rules.hasOwnProperty(property))
+      .forEach(property => rules[property] = jest.fn());
   });
 
   afterEach(() => {
@@ -32,12 +29,10 @@ describe('taqtileDangerjsPlugin()', () => {
 
     taqtileDangerjsPlugin();
 
-    rules.forEach((rule: any) => {
-      Object
-        .keys(rule)
-        .filter(property => rule.hasOwnProperty(property))
-        .forEach(property => expect(rule[property]).toHaveBeenCalledTimes(1));
-    });
+    Object
+    .keys(rules)
+    .filter(property => rules.hasOwnProperty(property))
+    .forEach(property => expect(rules[property]).toHaveBeenCalledTimes(1));
 
   });
 });

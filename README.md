@@ -34,15 +34,20 @@ Add your rules to `src/rules` folder and its respective tests.
 
 When adding new rules, please follow current scope files for `pr`, `nodejs`, `android`, etc or create a new one in case your rule does not fit in any of the existing ones.
 
+Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.html#phrasing) to understand how to better use error messages wording to rovide an provide impartial but polite feedback.
+
 ## What is currently being checked
 
-### Common
+### PR 
 
 - [x] Fail when no description is provided
 - [x] Warns if description provided is too short
+- [x] Big PRs
+
+### Platform/Language agnorstic
+
 - [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
 - [ ] `>>>` Strings to make sure rebase was successful
-- [x] Big PRs
 - [ ] Warn when `Gemfile` was modified and `Gemfile.lock` was not
 - [ ] Warn when Amazon Secret Key is hardcoded
 - [ ] Warn when `Dangerfile` was modified
@@ -50,10 +55,24 @@ When adding new rules, please follow current scope files for `pr`, `nodejs`, `an
 
 ### Node
 
-- [ ] Warn if some files/folders to be changed/committed like `yarn.lock`, `docker-compose.yml`, `Procfile`, `npm-shrinkwrap.json`, `node_modules`, `env.coffee`
-- [ ] Warn when `npm install -g` is used
-- [ ] Warn when `.env` or `.nvmrc` files are modified
-- [ ] Warn when `console.log` is added
+- [x] Warn if some files/folders to be changed/committed:
+  - `yarn.lock`
+  - `npm-shrinkwrap.json`
+  - `docker-compose.yml`
+  - `Procfile`
+  - `node_modules`
+  - `tasks/options/env.coffee`
+  - `tslint.json`
+  - `tsconfig.json`
+  - `.nvmrc`
+  - `.env`
+  - `.env.test`
+  - `.env.sample`
+  - `nodemon.json`
+  - `Dangerfil`
+- [x] Warn when `npm install -g` is used
+- [x] Warn when `.env` or `.nvmrc` files are modified
+- [x] Warn when `console.log` is added
 - [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
 - [ ] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
 - [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
@@ -116,7 +135,7 @@ At a glance:
 // dangerfile.js
 import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
-taqtileDangerjsPlugin()
+await taqtileDangerjsPlugin()
 ```
 
 ### For peril
@@ -141,7 +160,7 @@ Use it in any peril dangerfile
 // dangerfile.js
 import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
-taqtileDangerjsPlugin()
+await taqtileDangerjsPlugin()
 ```
 ## Changelog
 

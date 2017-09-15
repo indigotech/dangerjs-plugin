@@ -7,16 +7,16 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 // Taqtile rules
-import pr from './rules/pr';
+import * as rules from './rules';
 
 /**
  * Taqtile Danger-js Plugin
  */
-export default function taqtileDangerjsPlugin() {
-  [pr].forEach((rule: any) => {
-    Object
-      .keys(rule)
-      .filter(property => rule.hasOwnProperty(property))
-      .forEach(property => rule[property]());
-  });
+export default async function taqtileDangerjsPlugin() {
+
+  await Object
+    .keys(rules)
+    .filter(property => rules.hasOwnProperty(property))
+    .map(property => rules[property]());
+
 }
