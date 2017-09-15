@@ -44,7 +44,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warns if description provided is too short
 - [x] Big PRs
 
-### Platform/Language agnorstic
+### Platform/Language agnostic
 
 - [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
 - [ ] `>>>` Strings to make sure rebase was successful
