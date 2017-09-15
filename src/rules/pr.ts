@@ -10,9 +10,9 @@ export declare function markdown(message: string): void;
 /**
  * PR rules
  */
-export default {
+export let pr = {
   /** Checks presence of PR description */
-  body() {
+  async body() {
     const body = danger.github.pr.body;
     if (!body) {
       fail('This PR does not have a description.');
@@ -22,11 +22,11 @@ export default {
   },
 
   /** Warns if a PR is too big */
-  size() {
-    const pr = danger.github.pr;
-    if (pr.deletions - pr.additions > 200) {
+  async size() {
+    const github = danger.github.pr;
+    if (github.deletions - github.additions > 200) {
       message('🎉 Yay! Cheers for some code refactoring!');
-    } else if (pr.additions + pr.deletions > 500) {
+    } else if (github.additions + github.deletions > 500) {
       warn('Big PR!');
     }
   },
