@@ -30,4 +30,29 @@ export let pr = {
       warn('Big PR!');
     }
   },
+
+  /**
+   * Warns a Gemfile or package.json is changed and its lockfiles not
+   */
+  lockfiles() {
+    const includesFileWithPattern = (array: string[], pattern: string): boolean => {
+      const patternRegex = new RegExp(`.*${pattern}`, 'g');
+      const fileChanged = array.findIndex(file => patternRegex.test(file)) > -1;
+      return fileChanged;
+    };
+
+    const checkModifiedFileInconsistency = (source: string, target: string, ideaMessage: string) => {
+      const sourceFileChanged = includesFileWithPattern(danger.git.modified_files, source);
+      const targetFileChanged = includesFileWithPattern(danger.git.modified_files, target);
+      const inconsistencyInFiles = sourceFileChanged && !targetFileChanged;
+      if (inconsistencyInFiles) {
+        const errorMessage = `Changes were made to ${source}, but not to ${target}`;
+        warn(`${errorMessage} - <i>${ideaMessage}</i>`);
+      }
+    };
+
+    checkModifiedFileInconsistency('package.json', 'yarn.lock', 'Perhaps you need to run `yarn install`?');
+    checkModifiedFileInconsistency('Gemfile', 'Gemfile.lock', 'Perhaps you need to run `bundle install`?');
+  },
+
 };

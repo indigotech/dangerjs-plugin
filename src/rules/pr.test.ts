@@ -76,4 +76,75 @@ describe('PR info', () => {
 
   });
 
+  describe('Lockfiles', () => {
+
+    it('Doest not warn if just lockfiles are modified', () => {
+      global.danger = {
+        git: { modified_files: ['Gemfile.lock', 'yarn.lock'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledTimes(0);
+    });
+
+    it('Doest not warn if package.json and Gemfile did not change', () => {
+      global.danger = {
+        git: { modified_files: ['native/', 'yarn.lock'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledTimes(0);
+    });
+
+    it('Warns if Gemfile is modified and Gemfile.lock don\'t', () => {
+      global.danger = {
+        git: { modified_files: ['Gemfile'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledWith(
+        `Changes were made to Gemfile, but not to Gemfile.lock - <i>Perhaps you need to run \`bundle install\`?</i>`);
+    });
+
+    it('Doest not warn if Gemfile and Gemfile.lock are modified', () => {
+      global.danger = {
+        git: { modified_files: ['Gemfile', 'Gemfile.lock'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledTimes(0);
+    });
+
+    it('Warns if package.json is modified and yarn.lock don\'t', () => {
+      global.danger = {
+        git: { modified_files: ['package.json'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledWith(
+        `Changes were made to package.json, but not to yarn.lock - <i>Perhaps you need to run \`yarn install\`?</i>`);
+    });
+
+    it('Doest not warn if package.json and yarn.lock are modified', () => {
+      global.danger = {
+        git: { modified_files: ['package.json', 'yarn.lock'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledTimes(0);
+    });
+
+    it('Check for lockfiles outside the root directory', () => {
+      global.danger = {
+        git: { modified_files: ['native/package.json'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledWith(
+        `Changes were made to package.json, but not to yarn.lock - <i>Perhaps you need to run \`yarn install\`?</i>`);
+    });
+
+    it('Doest not warn if package.json and yarn.lock are modified outside the root directory', () => {
+      global.danger = {
+        git: { modified_files: ['native/package.json', 'native/yarn.lock'] },
+      };
+      pr.lockfiles();
+      expect(global.warn).toHaveBeenCalledTimes(0);
+    });
+
+  });
+
 });
