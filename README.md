@@ -135,9 +135,12 @@ At a glance:
 
 ```js
 // dangerfile.js
+import { schedule } from 'danger'
 import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
-await taqtileDangerjsPlugin()
+schedule(async() => {
+  await taqtileDangerjsPlugin();
+)
 ```
 
 ### For peril
@@ -160,9 +163,12 @@ Use it in any peril dangerfile
 
 ```js
 // dangerfile.js
+import { schedule } from 'danger'
 import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
-await taqtileDangerjsPlugin()
+schedule(async() => {
+  await taqtileDangerjsPlugin();
+)
 ```
 ## Changelog
 

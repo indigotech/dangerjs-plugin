@@ -7,10 +7,12 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
+import { Scope } from '../rule.type';
+
 /**
  * PR rules
  */
-export let platformAgnostic = {
+export let platformAgnostic: Scope = {
   /**
    * Warns a Gemfile or package.json is changed and its lockfiles not
    */
