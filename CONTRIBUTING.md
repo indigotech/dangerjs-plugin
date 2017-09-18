@@ -8,4 +8,6 @@ This project uses [semantic-release](https://github.com/semantic-release/semanti
 
 The main caveat: instead of running `git commit`, run `yarn commit` and follow the prompts to input a conventional changelog message via [commitizen](https://github.com/commitizen/cz-cli).
 
+Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.html#phrasing) to understand how to better use error messages to provide an impartial but polite feedback.
+
 :heart:

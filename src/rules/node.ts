@@ -7,6 +7,8 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
+import { Scope } from '../rule.type';
+
 // adapted from https://stackoverflow.com/a/37324915/429521
 const intersect = <T>(xs: T[], ys: T[]): T[] => xs.filter(x => ys.some(y => y === x));
 
@@ -30,7 +32,7 @@ export const filesToCheck = [
 /**
  * PR rules
  */
-export let node = {
+export let node: Scope = {
   /** Warns when ckey config files have been modified */
   async shouldNotHaveBeenChanged() {
 
@@ -53,10 +55,9 @@ export let node = {
       danger.git.modified_files || [],
     );
 
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < files.length; i++) {
-      const file = await danger.git.diffForFile(files[i]);
-      if (file && file.added.match(/console\.log/ig)) {
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
+      if (diff && diff.added.match(/console\.log/ig)) {
         warn('This PR adds `console.log` to code.');
         // breaks to avoid reading all files when we already know that there is an issue
         break;
@@ -71,10 +72,9 @@ export let node = {
       danger.git.modified_files || [],
     );
 
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < files.length; i++) {
-      const file = await danger.git.diffForFile(files[i]);
-      if (file && file.added.match(/npm install \-g/ig)) {
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
+      if (diff && diff.added.match(/npm install \-g/ig)) {
         // tslint:disable-next-line:max-line-length
         fail(['This PR adds `npm install \-g` instuctions to the project, ',
           'please prefer adding packages as `dependencies` or `devDependencies` to `package.json` instead. ',
@@ -84,4 +84,5 @@ export let node = {
       }
     }
   },
+
 };

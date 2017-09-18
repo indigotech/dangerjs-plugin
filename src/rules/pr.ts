@@ -7,10 +7,12 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
+import { Scope } from '../rule.type';
+
 /**
  * PR rules
  */
-export let pr = {
+export let pr: Scope = {
   /** Checks presence of PR description */
   async body() {
     const body = danger.github.pr.body;

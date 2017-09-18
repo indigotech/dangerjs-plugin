@@ -7,10 +7,12 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
+import { Scope } from '../rule.type';
+
 /**
  * PR rules
  */
-export let platformAgnostic = {
+export let platformAgnostic: Scope = {
   /**
    * Warns a Gemfile or package.json is changed and its lockfiles not
    */
@@ -46,7 +48,7 @@ export let platformAgnostic = {
       const diff = await danger.git.diffForFile(file);
 
       if (diff && diff.added.match(/http:\/\//ig)) {
-        warn('Detected insecure: this PR adds `http` instead of `https` to code!');
+        warn('This PR has `http://` (instead of `https://`), may be a review is needed for security reasons');
         break;
       }
     }

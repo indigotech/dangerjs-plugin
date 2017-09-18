@@ -1,5 +1,6 @@
 import taqtileDangerjsPlugin from './index';
 
+import { Rule, Scope } from './rule.type';
 import * as rules from './rules';
 
 declare const global: any;
@@ -12,10 +13,12 @@ describe('taqtileDangerjsPlugin()', () => {
     global.fail = jest.fn();
     global.markdown = jest.fn();
 
+    // mocks all rules from all ≠ scopes
     Object
-      .keys(rules)
-      .filter(property => rules.hasOwnProperty(property))
-      .forEach(property => rules[property] = jest.fn());
+    .keys(rules)
+    .filter(property => rules.hasOwnProperty(property))
+    .map(property => rules[property] as Scope)
+    .map(scope => Object.keys(scope).forEach(rule => scope[rule] = jest.fn(() => Promise.resolve())));
   });
 
   afterEach(() => {
@@ -25,14 +28,16 @@ describe('taqtileDangerjsPlugin()', () => {
     global.markdown = undefined;
   });
 
-  it('Checks if all rules have been called', () => {
+  it('Checks if all rules have been called', async () => {
 
-    taqtileDangerjsPlugin();
+    await taqtileDangerjsPlugin();
 
     Object
-    .keys(rules)
-    .filter(property => rules.hasOwnProperty(property))
-    .forEach(property => expect(rules[property]).toHaveBeenCalledTimes(1));
+      .keys(rules)
+      .filter(property => rules.hasOwnProperty(property))
+      .map(property => rules[property] as Scope)
+      .map(scope => Object.keys(scope).forEach(rule => expect(scope[rule]).toHaveBeenCalled()));
 
   });
+
 });
