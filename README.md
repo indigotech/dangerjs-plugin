@@ -34,7 +34,7 @@ Add your rules to `src/rules` folder and its respective tests.
 
 When adding new rules, please follow current scope files for `pr`, `nodejs`, `android`, etc or create a new one in case your rule does not fit in any of the existing ones.
 
-Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.html#phrasing) to understand how to better use error messages wording to rovide an provide impartial but polite feedback.
+Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.html#phrasing) to understand how to better use error messages to provide an impartial but polite feedback.
 
 ## What is currently being checked
 
