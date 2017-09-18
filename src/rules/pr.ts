@@ -38,11 +38,11 @@ export let pr = {
       danger.git.modified_files || [],
     );
 
-    for (let i = 0; i < files.length; i++) {
-      const file = await danger.git.diffForFile(files[i]);
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
 
-      if (file && file.added.match(/http:/ig)) {
-        warn('Detected insecure: use of http instead of https on file ' + files[i]);
+      if (diff && diff.added.match(/http:/ig)) {
+        warn('Detected insecure: use of http instead of https on file ' + file);
       }
     }
   },
