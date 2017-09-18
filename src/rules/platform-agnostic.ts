@@ -48,7 +48,7 @@ export let platformAgnostic: Scope = {
       const diff = await danger.git.diffForFile(file);
 
       if (diff && diff.added.match(/http:\/\//ig)) {
-        warn('Detected insecure: this PR adds `http` instead of `https` to code!');
+        warn('This PR has `http://` (instead of `https://`), may be a review is needed for security reasons');
         break;
       }
     }
