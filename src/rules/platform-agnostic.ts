@@ -42,8 +42,6 @@ export let platformAgnostic = {
       danger.git.modified_files || [],
     );
 
-    console.log('***** a\n\n');
-
     for (const file of files) {
       const diff = await danger.git.diffForFile(file);
 
