@@ -50,7 +50,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [ ] `>>>` Strings to make sure rebase was successful
 - [ ] Warn when Amazon Secret Key is hardcoded
 - [ ] Warn when `Dangerfile` was modified
-- [ ] Warn when `http://` is used
+- [x] Warn when `http://` is used
 - [x] Warn when definition files were changes but their lockfile weren't:
   - `Gemfile` vs `Gemfile.lock`
   - `package.json` vs `yarn.lock`
