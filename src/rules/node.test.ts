@@ -1,4 +1,5 @@
 import * as Faker from 'faker';
+
 import { filesToCheck, node } from './node';
 
 declare const global: any;
@@ -158,6 +159,87 @@ describe('Node info', () => {
 
       expect(global.fail).not.toBeCalled();
 
+    });
+
+  });
+
+  describe('node version', () => {
+
+    it('Should warn about node version probably inconsistency on `.nvmrc` file', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['any'],
+          JSONDiffForFile: jest.fn(() => ({
+            'engines.node': {
+              after: `8.4.0`,
+            },
+          })),
+        },
+      };
+
+      await node.nodeVersion();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn about node version probably inconsistency on `package.json` file', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json', '.nvmrc'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            after: `8.4.0`,
+          })),
+          JSONDiffForFile: jest.fn(() => ({})),
+        },
+      };
+
+      await node.nodeVersion();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn about different node version in files', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['.nvmrc'],
+          diffForFile: jest.fn(() => ({
+            after: `8.4.0`,
+          })),
+          JSONDiffForFile: jest.fn(() => ({
+            'engines.node': {
+              after: `8.1.0`,
+            },
+          })),
+        },
+      };
+
+      await node.nodeVersion();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn about node version inconsistency', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['.nvmrc'],
+          diffForFile: jest.fn(() => ({
+            after: `8.4.0`,
+          })),
+          JSONDiffForFile: jest.fn(() => ({
+            'engines.node': {
+              after: `8.4.0`,
+            },
+          })),
+        },
+      };
+
+      await node.nodeVersion();
+
+      expect(global.warn).not.toBeCalled();
     });
 
   });
