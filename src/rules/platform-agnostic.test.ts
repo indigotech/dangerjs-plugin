@@ -106,7 +106,8 @@ describe('Platform Agnostic', () => {
       };
 
       await platformAgnostic.http();
-      expect(global.warn).toBeCalledWith('Detected insecure: this PR adds `http` instead of `https` to code!');
+      // tslint:disable-next-line:max-line-length
+      expect(global.warn).toBeCalledWith('This PR has `http://` (instead of `https://`), may be a review is needed for security reasons');
     });
 
     it('Should not warn about http when it was not used', async () => {
