@@ -89,4 +89,65 @@ describe('Platform Agnostic', () => {
 
   });
 
+  describe('http', () => {
+
+    it('Should warn when http is used instead of https', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            http://google.com;
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.http();
+      expect(global.warn).toBeCalledWith('Detected insecure: this PR adds `http` instead of `https` to code!');
+    });
+
+    it('Should not warn about http when it was not used', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            https://google.com
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.http();
+      expect(global.fail).not.toBeCalled();
+    });
+
+    it('Should not warn about http when false positives were used', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            https://google.com
+            okHttpClient
+            httpClient
+            this is a http on a comment
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.http();
+      expect(global.fail).not.toBeCalled();
+    });
+
+  });
+
 });

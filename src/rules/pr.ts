@@ -31,20 +31,4 @@ export let pr = {
     }
   },
 
-  /** Warns if http:// was used instead of https:// */
-  async http() {
-    const files = ([] as string[]).concat(
-      danger.git.created_files  || [],
-      danger.git.modified_files || [],
-    );
-
-    for (const file of files) {
-      const diff = await danger.git.diffForFile(file);
-
-      if (diff && diff.added.match(/http:/ig)) {
-        warn('Detected insecure: use of http instead of https on file ' + file);
-      }
-    }
-  },
-
 };
