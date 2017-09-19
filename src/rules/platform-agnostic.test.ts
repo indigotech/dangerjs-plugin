@@ -179,4 +179,51 @@ describe('Platform Agnostic', () => {
 
   });
 
+  describe('rebase', () => {
+
+    it('Does not warn when no rebase issue is found', async () => {
+
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            more text;`,
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    it('Does warn when rebase issue is found', async () => {
+
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            <<<<<<< .mine
+            ========
+            >>>>>>> .theirs
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+
+    });
+
+  });
+
 });

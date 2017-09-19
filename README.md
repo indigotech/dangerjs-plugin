@@ -47,7 +47,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 ### Platform/Language agnostic
 
 - [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
-- [ ] `>>>` Strings to make sure rebase was successful
+- [x] `>>>` Strings to make sure rebase was successful
 - [ ] Warn when Amazon Secret Key is hardcoded
 - [x] Warn when `Dangerfile` was modified
 - [x] Warn when `http://` is used

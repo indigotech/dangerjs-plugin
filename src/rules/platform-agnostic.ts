@@ -68,4 +68,21 @@ export let platformAgnostic: Scope = {
     }
   },
 
+  /** Warns if >>>>>> is found, may be a rebase was not properly executed and some files are corrupt */
+  async rebase() {
+    const files = ([] as string[]).concat(
+      danger.git.created_files  || [],
+      danger.git.modified_files || [],
+    );
+
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
+
+      if (diff && diff.added.match(/^>>>>>>>/gm)) {
+        warn('This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+        break;
+      }
+    }
+  },
+
 };
