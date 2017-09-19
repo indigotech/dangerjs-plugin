@@ -25,7 +25,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['Gemfile.lock', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Doest not warn if package.json and Gemfile did not change', async () => {
@@ -33,7 +33,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['native/', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Warns if Gemfile is modified and Gemfile.lock don\'t', async () => {
@@ -50,7 +50,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['Gemfile', 'Gemfile.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Warns if package.json is modified and yarn.lock don\'t', async () => {
@@ -67,7 +67,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['package.json', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Check for lockfiles outside the root directory', async () => {
@@ -84,7 +84,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['native/package.json', 'native/yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
   });
