@@ -10,7 +10,7 @@ export declare function markdown(message: string): void;
 import { Scope } from '../rule.type';
 
 /**
- * PR rules
+ * Web rules
  */
 export let web: Scope = {
   /** Warn if css files were changed */

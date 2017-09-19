@@ -46,7 +46,6 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### Platform/Language agnostic
 
-- [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
 - [x] `>>>` Strings to make sure rebase was successful
 - [ ] Warn when Amazon Secret Key is hardcoded
 - [x] Warn when `Dangerfile` was modified
@@ -54,9 +53,6 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warn when definition files were changes but their lockfile weren't:
   - `Gemfile` vs `Gemfile.lock`
   - `package.json` vs `yarn.lock`
-
-### Node
-
 - [x] Warn if some files/folders to be changed/committed:
   - `yarn.lock`
   - `npm-shrinkwrap.json`
@@ -72,8 +68,16 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
   - `.env.sample`
   - `nodemon.json`
   - `Dangerfile`
+  - `.gitignore`
+  - `Gemfile`
+  - `Gemfile.lock`
+  - `.travis.yml`
+  - `.gradle`
+  - `Manifest.xml`
+
+### Node
+
 - [x] Warn when `npm install -g` is used
-- [x] Warn when `.env` or `.nvmrc` files are modified
 - [x] Warn when `console.log` is added
 - [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
 - [x] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
@@ -99,7 +103,6 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### Android
 
-- [x] Warn when `.gradle` or `Manifest.xml` files are modified
 - [ ] Warn if there are hardcoded dimens different from `0dp` on `.xml` files
 - [ ] Warn if there are hardcoded colors on `.xml` files
 - [ ] Warn if there are hardcoded texts on `.xml` files

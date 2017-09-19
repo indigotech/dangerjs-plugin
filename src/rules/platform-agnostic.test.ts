@@ -1,11 +1,14 @@
 import * as Faker from 'faker';
-import { platformAgnostic } from './platform-agnostic';
+import { filesToCheck, platformAgnostic } from './platform-agnostic';
 
 declare const global: any;
 
 describe('Platform Agnostic', () => {
-  beforeEach(async () => {
-    global.warn = jest.fn();
+  let warnMock: jest.Mock<any>;
+
+  beforeEach(() => {
+    warnMock = jest.fn();
+    global.warn = jest.fn(warnMock);
     global.message = jest.fn();
     global.fail = jest.fn();
     global.markdown = jest.fn();
@@ -221,6 +224,63 @@ describe('Platform Agnostic', () => {
 
       expect(global.warn).toBeCalledWith(
         'This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+
+    });
+
+  });
+
+  describe('Modified files', () => {
+
+    it('Should not warn when modified files are not on the to watch list', async () => {
+      global.danger = {
+        git: { modified_files: ['a random file', 'another random file'] },
+      };
+      await platformAgnostic.shouldNotHaveBeenChanged();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    it('Should not warn when deleted files are not on the to watch list', async () => {
+      global.danger = {
+        git: { deleted_files: ['a random file', 'another random file'] },
+      };
+      await platformAgnostic.shouldNotHaveBeenChanged();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    filesToCheck.forEach(file => {
+      it(`Checks if warns when ${file} is modified`, async () => {
+        global.danger = {
+          git: { modified_files: ['a random file', file, 'another random file'] },
+        };
+        await platformAgnostic.shouldNotHaveBeenChanged();
+
+        expect(global.warn).toBeCalled();
+
+        const expected = [
+          expect.stringMatching('The following files are rarely modified but were commited'),
+          expect.stringMatching(file),
+        ];
+        expect(warnMock.mock.calls[0]).toEqual(expect.arrayContaining(expected));
+      });
+
+      it(`Checks if warns when ${file} is deleted`, async () => {
+        global.danger = {
+          git: { deleted_files: ['a random file', file, 'another random file'] },
+        };
+        await platformAgnostic.shouldNotHaveBeenChanged();
+
+        expect(global.warn).toBeCalled();
+
+        const expected = [
+          expect.stringMatching('The following files are rarely modified but were commited'),
+          expect.stringMatching(file),
+        ];
+        expect(warnMock.mock.calls[0]).toEqual(expect.arrayContaining(expected));
+      });
 
     });
 
