@@ -151,4 +151,32 @@ describe('Platform Agnostic', () => {
 
   });
 
+  describe ('dangerfile', () => {
+
+    it ('Should warn Dangerfile was modified', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any', 'Dangerfile'],
+        },
+      };
+
+      await platformAgnostic.dangerfile();
+      expect(global.warn).toBeCalledWith('Dangerfile was modified.');
+
+    });
+
+    it ('Should not warn Dangerfile was modified', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any', 'ClassWithDangerOnName.java'],
+        },
+      };
+
+      await platformAgnostic.dangerfile();
+      expect(global.fail).not.toBeCalled();
+
+    });
+
+  });
+
 });
