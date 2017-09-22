@@ -54,4 +54,18 @@ export let platformAgnostic: Scope = {
     }
   },
 
+  /** Warns when Dangerfile was modified */
+  async dangerfile() {
+    const files = ([] as string[]).concat(
+      danger.git.modified_files || [],
+    );
+
+    for (const file of files) {
+      if (file.match('Dangerfile')) {
+        warn('Dangerfile was modified.');
+        break;
+      }
+    }
+  },
+
 };
