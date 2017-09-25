@@ -17,7 +17,7 @@ const intersect = <T>(xs: T[], ys: T[]): T[] => xs.filter(x => ys.some(y => y ==
  * Return false otherwise.
  * @param pattern Regex pattern
  */
-const changedFilesContainsRegex = async (pattern: string): Promise<boolean> => {
+const changedFilesContainsRegex = async (pattern: RegExp): Promise<boolean> => {
   const files = ([] as string[]).concat(
     danger.git.created_files  || [],
     danger.git.modified_files || [],
@@ -25,7 +25,7 @@ const changedFilesContainsRegex = async (pattern: string): Promise<boolean> => {
 
   for (const fileName of files) {
     const file = await danger.git.diffForFile(fileName);
-    if (file && file.added.match(new RegExp(`${pattern}`, 'g'))) {
+    if (file && file.added.match(pattern)) {
       // return to avoid reading all files when we already know that there is an issue
       return true;
     }
@@ -71,14 +71,14 @@ export let node: Scope = {
 
   /** Warns when 'console.log' is added to code */
   async consoleLog() {
-    if (changedFilesContainsRegex('console\.log')) {
+    if (changedFilesContainsRegex(/console\.log/ig)) {
       warn('This PR adds `console.log` to code.');
     }
   },
 
   /** Warns when 'npm install -g' is added to code */
   async npmGlobal() {
-    if (await changedFilesContainsRegex('npm install \\-g')) {
+    if (await changedFilesContainsRegex(/npm install \-g/ig)) {
       // tslint:disable-next-line:max-line-length
       fail(['This PR adds `npm install \-g` instuctions to the project, ',
         'please prefer adding packages as `dependencies` or `devDependencies` to `package.json` instead. ',
@@ -95,32 +95,34 @@ export let node: Scope = {
     );
 
     const packageJsonNodeVersion = await (async () => {
-      const packageJsonIndex = files.findIndex(fileName => fileName.match(/package\.json/gi) != null);
+      const packageJsonIndex = files.findIndex(fileName => fileName.match(/package\.json/gi) !== null);
       let packageJsonNodeVersionValue;
       if (packageJsonIndex > -1) {
         const packageJsonFile = await danger.git.JSONDiffForFile(files[packageJsonIndex]);
-        if (packageJsonFile['engines.node']) {
-          packageJsonNodeVersionValue = packageJsonFile['engines.node'].after;
+        if (packageJsonFile['engines'] && packageJsonFile.engines.after['node']) {
+          packageJsonNodeVersionValue = packageJsonFile.engines.after['node'];
         }
       }
       return packageJsonNodeVersionValue;
     })();
 
     const nvmrcNodeVersion = await (async () => {
-      let nvmrcNodeVersionValue;
-      const nvmrcIndex = files.findIndex(fileName => fileName.match(/\.nvmrc/gi) != null);
-      if (nvmrcIndex > -1) {
-        const nvmrcFile = await danger.git.diffForFile(files[nvmrcIndex]);
-        if (nvmrcFile) {
-          nvmrcNodeVersionValue = nvmrcFile.after;
-        }
+      const nvmrcFile = await (files
+        .filter(name => name.match(/\.nvmrc/gi)) // ['file 1', 'file 2', 'file 3'] or []
+        .filter((_, index) => index === 0) // ['file 1'] or []
+        .map(name => danger.git.diffForFile(name)) // [Promise] or []
+        .find((_, index) => index === 0) || Promise.resolve(null)); // Promise
+
+      if (nvmrcFile) {
+        return nvmrcFile.after;
+      } else {
+        return null;
       }
-      return nvmrcNodeVersionValue;
     })();
 
     if (packageJsonNodeVersion && nvmrcNodeVersion && packageJsonNodeVersion !== nvmrcNodeVersion) {
       warn([`The node version is different between ".nvmrc" (${nvmrcNodeVersion})`,
-      `and "package.json" (${packageJsonNodeVersion}), please fix the inconsistency`].join(''));
+      ` and "package.json" (${packageJsonNodeVersion}), please fix the inconsistency`].join(''));
     } else if (nvmrcNodeVersion && !packageJsonNodeVersion) {
       warn(`The PR changes the node version on ".nvmrc" file. Please remember to update on "package.json" file.`);
     } else if (packageJsonNodeVersion && !nvmrcNodeVersion) {

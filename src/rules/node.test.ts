@@ -171,8 +171,10 @@ describe('Node info', () => {
           modified_files: ['package.json'],
           created_files: ['any'],
           JSONDiffForFile: jest.fn(() => ({
-            'engines.node': {
-              after: `8.4.0`,
+            engines: {
+              after: {
+                node: `8.4.0`,
+              },
             },
           })),
         },
@@ -209,8 +211,10 @@ describe('Node info', () => {
             after: `8.4.0`,
           })),
           JSONDiffForFile: jest.fn(() => ({
-            'engines.node': {
-              after: `8.1.0`,
+            engines: {
+              after: {
+                node: `8.1.0`,
+              },
             },
           })),
         },
@@ -230,8 +234,10 @@ describe('Node info', () => {
             after: `8.4.0`,
           })),
           JSONDiffForFile: jest.fn(() => ({
-            'engines.node': {
-              after: `8.4.0`,
+            engines: {
+              after: {
+                node: `8.4.0`,
+              },
             },
           })),
         },
