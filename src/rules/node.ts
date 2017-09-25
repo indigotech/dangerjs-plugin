@@ -8,7 +8,6 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
-
 // adapted from https://stackoverflow.com/a/37324915/429521
 const intersect = <T>(xs: T[], ys: T[]): T[] => xs.filter(x => ys.some(y => y === x));
 
@@ -99,8 +98,8 @@ export let node: Scope = {
       let packageJsonNodeVersionValue;
       if (packageJsonIndex > -1) {
         const packageJsonFile = await danger.git.JSONDiffForFile(files[packageJsonIndex]);
-        if (packageJsonFile['engines'] && packageJsonFile.engines.after['node']) {
-          packageJsonNodeVersionValue = packageJsonFile.engines.after['node'];
+        if (packageJsonFile.engines && packageJsonFile.engines.after) {
+          packageJsonNodeVersionValue = packageJsonFile.engines.after.node;
         }
       }
       return packageJsonNodeVersionValue;
