@@ -14,17 +14,16 @@ export let android = {
 
   /**  Warn when .gradle or Manifest.xml files are modified */
   async modifiedGradleOrManifest() {
-    const hasFileWithPattern = (array: string[], pattern: string): boolean => {
-      const patternRegex = new RegExp(`.*${pattern}`, 'gi');
-      const fileChanged = array.findIndex(file => patternRegex.test(file)) > -1;
+    const hasFileWithPattern = (array: string[], pattern: RegExp): boolean => {
+      const fileChanged = array.findIndex(file => pattern.test(file)) > -1;
       return fileChanged;
     };
 
-    if (hasFileWithPattern(danger.git.modified_files, 'Manifest.xml')) {
+    if (hasFileWithPattern(danger.git.modified_files, /Manifest.xml/ig)) {
       warn('This PR changes the "Manifest.xml" file.');
     }
 
-    if (hasFileWithPattern(danger.git.modified_files, '.gradle')) {
+    if (hasFileWithPattern(danger.git.modified_files, /\.gradle/)) {
       warn('This PR changes the ".gradle" file.');
     }
   },
