@@ -99,7 +99,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### Android
 
-- [ ] Warn when `.gradle` or `Manifest.xml` files are modified
+- [x] Warn when `.gradle` or `Manifest.xml` files are modified
 - [ ] Warn if there are hardcoded dimens different from `0dp` on `.xml` files
 - [ ] Warn if there are hardcoded colors on `.xml` files
 - [ ] Warn if there are hardcoded texts on `.xml` files
