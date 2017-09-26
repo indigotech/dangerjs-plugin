@@ -179,4 +179,62 @@ describe('Platform Agnostic', () => {
 
   });
 
+  describe('rebase', () => {
+
+    it('Should warn when conflict issues were not resolved', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            >>>>>>>
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.rebase();
+      expect(global.fail).toBeCalledWith('Commited file without resolving merges/rebases conflict issues.');
+    });
+
+    it('Should not warn when conflict issues were resolved', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.rebase();
+      expect(global.fail).not.toBeCalled();
+    });
+
+    it('Should not warn about conflict issues when false positives were found', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            a >= b
+            >>>> >>>
+            more text;`,
+          })),
+        },
+      };
+
+      await platformAgnostic.rebase();
+      expect(global.fail).not.toBeCalled();
+    });
+
+  });
+
 });
