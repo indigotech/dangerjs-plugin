@@ -68,4 +68,20 @@ export let platformAgnostic: Scope = {
     }
   },
 
+  /** Warns when conflict issues were not resolved */
+  async rebase() {
+    const files = ([] as string[]).concat(
+      danger.git.created_files  || [],
+      danger.git.modified_files || [],
+    );
+
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
+      if (diff && diff.added.match(/>>>>>>>/g)) {
+        fail('Commited file without resolving merges/rebases conflict issues.');
+        break;
+      }
+    }
+  },
+
 };
