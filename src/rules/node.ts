@@ -74,7 +74,6 @@ export let node: Scope = {
       } else {
         return null;
       }
-
     })();
 
     const nvmrcNodeVersion = await (async () => {
