@@ -101,4 +101,31 @@ export let node: Scope = {
     }
   },
 
+  /** Warns when version dependency are not fixed */
+  async packageJsonVersionFixed() {
+
+    const files = ([] as string[]).concat(
+      danger.git.created_files  || [],
+      danger.git.modified_files || [],
+    );
+
+    const packageJsonIndex = files.findIndex(fileName => fileName.match(/package\.json/gi) !== null);
+    if (packageJsonIndex > -1) {
+      const packageJsonFile = await danger.git.diffForFile(files[packageJsonIndex]);
+
+      /*
+        Regex
+        (?:((~|\^)(\d+\.\d+)(\.\d+)?) => Ex: ~1.1.1 or ~1.1 or ^1.1.1 or ^1.1
+        or
+        (~|\^)?(\d+)((.(x|X))+)?) => Ex: ~1.x.x or ~1.x or ^1.x.x or ^1.x or 1
+      */
+      const versionRegex = /"(?:((~|\^)(\d+\.\d+)(\.\d+)?)|(~|\^)?(\d+)((.(x|X))+)?)"/g;
+
+      if (packageJsonFile && packageJsonFile.after.match(versionRegex)) {
+        warn(`This PR has dependency without fixed version, please set at least the major and minor explicitly.`);
+      }
+
+    }
+  },
+
 };

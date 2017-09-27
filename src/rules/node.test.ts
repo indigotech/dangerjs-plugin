@@ -248,4 +248,89 @@ describe('Node info', () => {
 
   });
 
+  describe('package.json version fixed', () => {
+
+    it('Should warn about package without version fixed when caret is used', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            after: `
+            "package1": "1.2.4",
+            "package2": "^1.2.4",
+            "package3": "1.2.4"
+            more text`,
+          })),
+        },
+      };
+
+      await node.packageJsonVersionFixed();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn about package without version fixed when tilde is used', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            after: `
+            "package1": "1.2.4",
+            "package2": "~1.2.4",
+            "package3": "1.2.4"
+            more text`,
+          })),
+        },
+      };
+
+      await node.packageJsonVersionFixed();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn about package without version fixed when minor version is not set', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            after: `
+            "package1": "1.2.4",
+            "package2": "1.x.x",
+            "package3": "1.2.4"
+            more text`,
+          })),
+        },
+      };
+
+      await node.packageJsonVersionFixed();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn about package without version fixed', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['package.json'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            after: `
+            "package1": "1.2.x",
+            "package2": "1.2.X",
+            "package3": "1.2.4",
+            "package4": "1.2"
+            more text`,
+          })),
+        },
+      };
+
+      await node.packageJsonVersionFixed();
+
+      expect(global.warn).not.toBeCalled();
+    });
+
+  });
+
 });
