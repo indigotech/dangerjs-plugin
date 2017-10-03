@@ -8,28 +8,7 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 import { Scope } from '../rule.type';
-import { warnIfFilesChanged } from '../utils';
-
-/**
- * Return true if there is any match with pattern on any file created or modified.
- * Return false otherwise.
- * @param pattern Regex pattern
- */
-const changedFilesContainsRegex = async (pattern: RegExp): Promise<boolean> => {
-  const files = ([] as string[]).concat(
-    danger.git.created_files  || [],
-    danger.git.modified_files || [],
-  );
-
-  for (const fileName of files) {
-    const file = await danger.git.diffForFile(fileName);
-    if (file && file.added.match(pattern)) {
-      // return to avoid reading all files when we already know that there is an issue
-      return true;
-    }
-  }
-  return false;
-};
+import { changedFilesContainsRegex, warnIfFilesChanged } from '../utils';
 
 export const filesToCheck = [
   'yarn.lock',
@@ -84,15 +63,19 @@ export let node: Scope = {
     );
 
     const packageJsonNodeVersion = await (async () => {
-      const packageJsonIndex = files.findIndex(fileName => fileName.match(/package\.json/gi) !== null);
-      let packageJsonNodeVersionValue;
-      if (packageJsonIndex > -1) {
-        const packageJsonFile = await danger.git.JSONDiffForFile(files[packageJsonIndex]);
-        if (packageJsonFile.engines && packageJsonFile.engines.after) {
-          packageJsonNodeVersionValue = packageJsonFile.engines.after.node;
-        }
+
+      const packageJsonFile = await(files
+        .filter(name => name.match(/package\.json/gi)) // ['file 1', 'file 2', 'file 3'] or []
+        .filter((_, index) => index === 0) // ['file 1'] or []
+        .map(name => danger.git.JSONDiffForFile(name)) // [Promise] or []
+        .find((_, index) => index === 0) || Promise.resolve(null)); // Promise
+
+      if (packageJsonFile && packageJsonFile.engines && packageJsonFile.engines.after) {
+        return packageJsonFile.engines.after.node;
+      } else {
+        return null;
       }
-      return packageJsonNodeVersionValue;
+
     })();
 
     const nvmrcNodeVersion = await (async () => {

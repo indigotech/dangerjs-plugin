@@ -23,3 +23,24 @@ export async function warnIfFilesChanged(filesToCheck: FilesType[] ): Promise<vo
     warn(`The following files are rarely modified but were commited: ${toWarn.map(f => `'${f}'`).join(', ')}`);
   }
 }
+
+/**
+ * Return true if there is any match with pattern on any file created or modified.
+ * Return false otherwise.
+ * @param pattern Regex pattern
+ */
+export const changedFilesContainsRegex = async (pattern: RegExp): Promise<boolean> => {
+  const files = ([] as string[]).concat(
+    danger.git.created_files  || [],
+    danger.git.modified_files || [],
+  );
+
+  for (const fileName of files) {
+    const file = await danger.git.diffForFile(fileName);
+    if (file && file.added.match(pattern)) {
+      // return to avoid reading all files when we already know that there is an issue
+      return true;
+    }
+  }
+  return false;
+};
