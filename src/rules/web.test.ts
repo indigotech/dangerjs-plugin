@@ -1,5 +1,5 @@
 import * as Faker from 'faker';
-import { filesToCheck, web } from './web';
+import { web } from './web';
 
 declare const global: any;
 
