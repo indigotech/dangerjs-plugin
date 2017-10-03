@@ -38,7 +38,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ## What is currently being checked
 
-### PR 
+### PR
 
 - [x] Fail when no description is provided
 - [x] Warns if description provided is too short
@@ -53,27 +53,13 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warn when definition files were changes but their lockfile weren't:
   - `Gemfile` vs `Gemfile.lock`
   - `package.json` vs `yarn.lock`
-- [x] Warn if some files/folders to be changed/committed:
-  - `yarn.lock`
-  - `npm-shrinkwrap.json`
-  - `docker-compose.yml`
-  - `Procfile`
-  - `node_modules`
-  - `tasks/options/env.coffee`
-  - `tslint.json`
-  - `tsconfig.json`
-  - `.nvmrc`
-  - `.env`
-  - `.env.test`
-  - `.env.sample`
-  - `nodemon.json`
+- [x] Warn if some files/folders were changed/committed:
   - `Dangerfile`
   - `.gitignore`
   - `Gemfile`
   - `Gemfile.lock`
   - `.travis.yml`
-  - `.gradle`
-  - `Manifest.xml`
+  - `coverage`
 
 ### Node
 
@@ -83,6 +69,21 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
 - [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
 - [ ] [TypeScript] Warn if using `<any>` as return type.
+- [x] Warn if some files/folders were changed/committed:
+  - `yarn.lock`,
+  - `npm-debug.log`
+  - `yarn-error.log`
+  - `docker-compose.yml`
+  - `tslint.json`
+  - `tsconfig.json`
+  - `.nvmrc`
+  - `Procfile`
+  - `npm-shrinkwrap.json`
+  - `.env`
+  - `.env.test`
+  - `.env.sample`
+  - `env.coffee`
+  - `nodemon.json`
 
 ### iOS
 
@@ -109,6 +110,9 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [ ] [Kotlin] Error when `!!` is found (similar to swift forced unwrap when `anything!` is found)
 - [ ] [Kotlin] Warn if using `Any` or `Any?` as return type
 - [ ] [Kotlin] Warn if `ButterKnife` or `findViewById` are found
+- [ ] Warn if some files/folders were changed/committed:
+  - `Manifest.xml`
+  - `.gradle`
 
 ### Web
 

@@ -8,51 +8,25 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 import { Scope } from '../rule.type';
+import { warnIfFilesChanged } from '../utils';
 
 export const filesToCheck = [
-  'yarn.lock',
-  'npm-shrinkwrap.json',
-  'docker-compose.yml',
-  'Procfile',
-  'node_modules',
-  'tasks/options/env.coffee',
-  'tslint.json',
-  'tsconfig.json',
-  '.nvmrc',
-  '.env',
-  '.env.test',
-  '.env.sample',
-  'nodemon.json',
   'Dangerfile',
   '.gitignore',
   'Gemfile',
   'Gemfile.lock',
   '.travis.yml',
-  '.gradle',
-  'Manifest.xml',
+  'coverage',
 ];
-
-// adapted from https://stackoverflow.com/a/37324915/429521
-const intersect = <T>(xs: T[], ys: T[]): T[] => xs.filter(x => ys.some(y => y === x));
 
 /**
  * Platform Agnostic rules
  */
 export let platformAgnostic: Scope = {
 
-  /** Warns when ckey config files have been modified */
+  /** Warns when key config files have been modified */
   async shouldNotHaveBeenChanged() {
-
-    const files = ([] as string[]).concat(
-      danger.git.deleted_files  || [],
-      danger.git.modified_files || [],
-    );
-
-    const toWarn = intersect(filesToCheck, files);
-
-    if (toWarn.length > 0) {
-      warn(`The following files are rarely modified but were commited: ${toWarn.map(f => `'${f}'`).join(', ')}`);
-    }
+    warnIfFilesChanged(filesToCheck);
   },
 
   /**

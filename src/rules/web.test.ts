@@ -1,12 +1,15 @@
 import * as Faker from 'faker';
-import { web } from './web';
+import { filesToCheck, web } from './web';
 
 declare const global: any;
 
 describe('Web', () => {
 
-  beforeEach(async () => {
-    global.warn = jest.fn();
+  let warnMock: jest.Mock<any>;
+
+  beforeEach(() => {
+    warnMock = jest.fn();
+    global.warn = jest.fn(warnMock);
     global.message = jest.fn();
     global.fail = jest.fn();
     global.markdown = jest.fn();

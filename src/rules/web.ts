@@ -8,11 +8,13 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 import { Scope } from '../rule.type';
+import { warnIfFilesChanged } from '../utils';
 
 /**
  * Web rules
  */
 export let web: Scope = {
+
   /** Warn if css files were changed */
   async css() {
     const files = ([] as string[]).concat(

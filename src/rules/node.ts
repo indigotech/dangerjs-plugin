@@ -8,6 +8,8 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 import { Scope } from '../rule.type';
+import { warnIfFilesChanged } from '../utils';
+
 /**
  * Return true if there is any match with pattern on any file created or modified.
  * Return false otherwise.
@@ -50,6 +52,11 @@ export const filesToCheck = [
  * Node rules
  */
 export let node: Scope = {
+
+  /** Warns when key config files have been modified */
+  async shouldNotHaveBeenChanged() {
+    warnIfFilesChanged(filesToCheck);
+  },
 
   /** Warns when 'console.log' is added to code */
   async consoleLog() {
