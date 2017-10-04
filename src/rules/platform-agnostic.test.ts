@@ -204,7 +204,6 @@ describe('Platform Agnostic', () => {
     });
 
     it('Does warn when rebase issue is found', async () => {
-
       global.danger = {
         git: {
           modified_files: ['any'],
@@ -223,8 +222,47 @@ describe('Platform Agnostic', () => {
       await platformAgnostic.rebase();
 
       expect(global.warn).toBeCalledWith(
-        'This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+        'This PR has lines starting with `<<<<<<<`, may be there was a rebase issue and some files are corrupt');
+    });
 
+    it('Does warn when rebase issue is found with just repated ">"', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            >>>>>>> .theirs
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+    });
+
+    it('Does warn when rebase issue is found with just repated "<"', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            <<<<<<< .mine
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `<<<<<<<`, may be there was a rebase issue and some files are corrupt');
     });
 
   });

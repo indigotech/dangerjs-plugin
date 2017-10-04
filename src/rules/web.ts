@@ -15,7 +15,7 @@ import { warnIfFilesChanged } from '../utils';
  */
 export let web: Scope = {
 
-  /** Warn if css files were changed */
+  /** Message if css files were changed */
   async css() {
     const files = ([] as string[]).concat(
       danger.git.created_files  || [],
@@ -24,7 +24,7 @@ export let web: Scope = {
     );
 
     for (const file of files) {
-      if (file.match(/\.styl/ig)) {
+      if (file.match(/\.styl|\.css|\.less|\.sass/ig)) {
         message('CSS modifications files were included in this PR');
         // breaks to avoid reading all files when we already know that there is an issue
         break;

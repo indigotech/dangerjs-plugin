@@ -36,40 +36,43 @@ describe('Web', () => {
       expect(global.message).not.toBeCalled();
     });
 
-    it('Does message if style files were added', async () => {
-      global.danger = {
-        git: {
-          created_files: ['any', 'file.styl'],
-          modified_files: ['any'],
-          deleted_files: ['any'],
-        },
-      };
-      await web.css();
-      expect(global.message).toBeCalled();
-    });
+    ['styl', 'css', 'less', 'sass'].forEach(extension => {
+      it(`Does message if .${extension} files were added`, async () => {
+        global.danger = {
+          git: {
+            created_files: ['any', `file.${extension}`],
+            modified_files: ['any'],
+            deleted_files: ['any'],
+          },
+        };
+        await web.css();
+        expect(global.message).toBeCalled();
+      });
 
-    it('Does message if style files were modified', async () => {
-      global.danger = {
-        git: {
-          created_files: ['any'],
-          modified_files: ['any', 'file.styl'],
-          deleted_files: ['any'],
-        },
-      };
-      await web.css();
-      expect(global.message).toBeCalled();
-    });
+      it(`Does message if .${extension} files were modified`, async () => {
+        global.danger = {
+          git: {
+            created_files: ['any'],
+            modified_files: ['any', `file.${extension}`],
+            deleted_files: ['any'],
+          },
+        };
+        await web.css();
+        expect(global.message).toBeCalled();
+      });
 
-    it('Does message if style files were removed', async () => {
-      global.danger = {
-        git: {
-          created_files: ['any'],
-          modified_files: ['any'],
-          deleted_files: ['any', 'file.styl'],
-        },
-      };
-      await web.css();
-      expect(global.message).toBeCalled();
+      it(`Does message if .${extension} files were removed`, async () => {
+        global.danger = {
+          git: {
+            created_files: ['any'],
+            modified_files: ['any'],
+            deleted_files: ['any', `file.${extension}`],
+          },
+        };
+        await web.css();
+        expect(global.message).toBeCalled();
+      });
+
     });
 
   });

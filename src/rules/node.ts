@@ -11,7 +11,6 @@ import { Scope } from '../rule.type';
 import { changedFilesContainsRegex, warnIfFilesChanged } from '../utils';
 
 export const filesToCheck = [
-  'yarn.lock',
   'npm-debug.log',
   'yarn-error.log',
   'docker-compose.yml',

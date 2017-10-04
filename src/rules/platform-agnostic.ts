@@ -94,8 +94,13 @@ export let platformAgnostic: Scope = {
     for (const file of files) {
       const diff = await danger.git.diffForFile(file);
 
-      if (diff && diff.added.match(/^>>>>>>>/gm)) {
-        warn('This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+      const match = diff && diff.added.match(/^>>>>>>>|^<<<<<<</gm);
+
+      if (match && match.length > 0) {
+        warn([
+          `This PR has lines starting with \`${match[0]}\`,`,
+          'may be there was a rebase issue and some files are corrupt',
+        ].join(' '));
         break;
       }
     }

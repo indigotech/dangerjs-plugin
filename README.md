@@ -70,7 +70,6 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
 - [ ] [TypeScript] Warn if using `<any>` as return type.
 - [x] Warn if some files/folders were changed/committed:
-  - `yarn.lock`,
   - `npm-debug.log`
   - `yarn-error.log`
   - `docker-compose.yml`
