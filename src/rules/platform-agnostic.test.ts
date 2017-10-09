@@ -1,11 +1,14 @@
 import * as Faker from 'faker';
-import { platformAgnostic } from './platform-agnostic';
+import { filesToCheck, platformAgnostic } from './platform-agnostic';
 
 declare const global: any;
 
 describe('Platform Agnostic', () => {
-  beforeEach(async () => {
-    global.warn = jest.fn();
+  let warnMock: jest.Mock<any>;
+
+  beforeEach(() => {
+    warnMock = jest.fn();
+    global.warn = jest.fn(warnMock);
     global.message = jest.fn();
     global.fail = jest.fn();
     global.markdown = jest.fn();
@@ -25,7 +28,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['Gemfile.lock', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Doest not warn if package.json and Gemfile did not change', async () => {
@@ -33,7 +36,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['native/', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Warns if Gemfile is modified and Gemfile.lock don\'t', async () => {
@@ -50,7 +53,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['Gemfile', 'Gemfile.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Warns if package.json is modified and yarn.lock don\'t', async () => {
@@ -67,7 +70,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['package.json', 'yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
     it('Check for lockfiles outside the root directory', async () => {
@@ -84,7 +87,7 @@ describe('Platform Agnostic', () => {
         git: { modified_files: ['native/package.json', 'native/yarn.lock'] },
       };
       await platformAgnostic.lockfiles();
-      expect(global.warn).toHaveBeenCalledTimes(0);
+      expect(global.warn).not.toBeCalled();
     });
 
   });
@@ -174,6 +177,148 @@ describe('Platform Agnostic', () => {
 
       await platformAgnostic.dangerfile();
       expect(global.fail).not.toBeCalled();
+
+    });
+
+  });
+
+  describe('rebase', () => {
+
+    it('Does not warn when no rebase issue is found', async () => {
+
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            more text;`,
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    it('Does warn when rebase issue is found', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            <<<<<<< .mine
+            ========
+            >>>>>>> .theirs
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `<<<<<<<`, may be there was a rebase issue and some files are corrupt');
+    });
+
+    it('Does warn when rebase issue is found with just repated ">"', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            >>>>>>> .theirs
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `>>>>>>>`, may be there was a rebase issue and some files are corrupt');
+    });
+
+    it('Does warn when rebase issue is found with just repated "<"', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['any'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            any text;
+            <<<<<<< .mine
+            console.log(variable);
+            more text;`.replace(/  /g, ''), // remove initial spaces for each line
+          })),
+        },
+      };
+      await platformAgnostic.rebase();
+
+      expect(global.warn).toBeCalledWith(
+        'This PR has lines starting with `<<<<<<<`, may be there was a rebase issue and some files are corrupt');
+    });
+
+  });
+
+  describe('Modified files', () => {
+
+    it('Should not warn when modified files are not on the to watch list', async () => {
+      global.danger = {
+        git: { modified_files: ['a random file', 'another random file'] },
+      };
+      await platformAgnostic.shouldNotHaveBeenChanged();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    it('Should not warn when deleted files are not on the to watch list', async () => {
+      global.danger = {
+        git: { deleted_files: ['a random file', 'another random file'] },
+      };
+      await platformAgnostic.shouldNotHaveBeenChanged();
+
+      expect(global.warn).not.toBeCalled();
+
+    });
+
+    filesToCheck.forEach(file => {
+      it(`Checks if warns when ${file} is modified`, async () => {
+        global.danger = {
+          git: { modified_files: ['a random file', file, 'another random file'] },
+        };
+        await platformAgnostic.shouldNotHaveBeenChanged();
+
+        expect(global.warn).toBeCalled();
+
+        const expected = [
+          expect.stringMatching('The following files are rarely modified but were commited'),
+          expect.stringMatching(file),
+        ];
+        expect(warnMock.mock.calls[0]).toEqual(expect.arrayContaining(expected));
+      });
+
+      it(`Checks if warns when ${file} is deleted`, async () => {
+        global.danger = {
+          git: { deleted_files: ['a random file', file, 'another random file'] },
+        };
+        await platformAgnostic.shouldNotHaveBeenChanged();
+
+        expect(global.warn).toBeCalled();
+
+        const expected = [
+          expect.stringMatching('The following files are rarely modified but were commited'),
+          expect.stringMatching(file),
+        ];
+        expect(warnMock.mock.calls[0]).toEqual(expect.arrayContaining(expected));
+      });
 
     });
 

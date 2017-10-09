@@ -8,11 +8,27 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 import { Scope } from '../rule.type';
+import { warnIfFilesChanged } from '../utils';
+
+export const filesToCheck = [
+  'Dangerfile',
+  '.gitignore',
+  'Gemfile',
+  'Gemfile.lock',
+  '.travis.yml',
+  'coverage',
+];
 
 /**
- * PR rules
+ * Platform Agnostic rules
  */
 export let platformAgnostic: Scope = {
+
+  /** Warns when key config files have been modified */
+  async shouldNotHaveBeenChanged() {
+    warnIfFilesChanged(filesToCheck);
+  },
+
   /**
    * Warns a Gemfile or package.json is changed and its lockfiles not
    */
@@ -63,6 +79,28 @@ export let platformAgnostic: Scope = {
     for (const file of files) {
       if (file.match('Dangerfile')) {
         warn('Dangerfile was modified.');
+        break;
+      }
+    }
+  },
+
+  /** Warns if >>>>>> is found, may be a rebase was not properly executed and some files are corrupt */
+  async rebase() {
+    const files = ([] as string[]).concat(
+      danger.git.created_files  || [],
+      danger.git.modified_files || [],
+    );
+
+    for (const file of files) {
+      const diff = await danger.git.diffForFile(file);
+
+      const match = diff && diff.added.match(/^>>>>>>>|^<<<<<<</gm);
+
+      if (match && match.length > 0) {
+        warn([
+          `This PR has lines starting with \`${match[0]}\`,`,
+          'may be there was a rebase issue and some files are corrupt',
+        ].join(' '));
         break;
       }
     }

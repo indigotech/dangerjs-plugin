@@ -38,7 +38,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ## What is currently being checked
 
-### PR 
+### PR
 
 - [x] Fail when no description is provided
 - [x] Warns if description provided is too short
@@ -46,39 +46,43 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### Platform/Language agnostic
 
-- [ ] Warn if some files/folders to be changed/committed like `.gitignore`, `Gemfile`, `Gemfile.lock`, `.travis.yml`
-- [ ] `>>>` Strings to make sure rebase was successful
+- [x] `>>>` Strings to make sure rebase was successful
 - [ ] Warn when Amazon Secret Key is hardcoded
-- [ ] Warn when `Dangerfile` was modified
+- [x] Warn when `Dangerfile` was modified
 - [x] Warn when `http://` is used
 - [x] Warn when definition files were changes but their lockfile weren't:
   - `Gemfile` vs `Gemfile.lock`
   - `package.json` vs `yarn.lock`
+- [x] Warn if some files/folders were changed/committed:
+  - `Dangerfile`
+  - `.gitignore`
+  - `Gemfile`
+  - `Gemfile.lock`
+  - `.travis.yml`
+  - `coverage`
 
 ### Node
 
-- [x] Warn if some files/folders to be changed/committed:
-  - `yarn.lock`
-  - `npm-shrinkwrap.json`
-  - `docker-compose.yml`
-  - `Procfile`
-  - `node_modules`
-  - `tasks/options/env.coffee`
-  - `tslint.json`
-  - `tsconfig.json`
-  - `.nvmrc`
-  - `.env`
-  - `.env.test`
-  - `.env.sample`
-  - `nodemon.json`
-  - `Dangerfil`
 - [x] Warn when `npm install -g` is used
-- [x] Warn when `.env` or `.nvmrc` files are modified
 - [x] Warn when `console.log` is added
 - [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
 - [x] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
 - [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
 - [ ] [TypeScript] Warn if using `<any>` as return type.
+- [x] Warn if some files/folders were changed/committed:
+  - `npm-debug.log`
+  - `yarn-error.log`
+  - `docker-compose.yml`
+  - `tslint.json`
+  - `tsconfig.json`
+  - `.nvmrc`
+  - `Procfile`
+  - `npm-shrinkwrap.json`
+  - `.env`
+  - `.env.test`
+  - `.env.sample`
+  - `env.coffee`
+  - `nodemon.json`
 
 ### iOS
 
@@ -99,25 +103,19 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### Android
 
-- [x] Warn when `.gradle` or `Manifest.xml` files are modified
 - [ ] Warn if there are hardcoded dimens different from `0dp` on `.xml` files
 - [ ] Warn if there are hardcoded colors on `.xml` files
 - [ ] Warn if there are hardcoded texts on `.xml` files
 - [ ] [Kotlin] Error when `!!` is found (similar to swift forced unwrap when `anything!` is found)
 - [ ] [Kotlin] Warn if using `Any` or `Any?` as return type
 - [ ] [Kotlin] Warn if `ButterKnife` or `findViewById` are found
+- [ ] Warn if some files/folders were changed/committed:
+  - `Manifest.xml`
+  - `.gradle`
 
 ### Web
 
-- [ ] Warn if some files/folders to be changed/committed like `yarn.lock`, `docker-compose.yml`, `Procfile`, `npm-shrinkwrap.json`, `node_modules`, `env.coffee`
-- [ ] Warn when `npm install -g` is used
-- [ ] Warn when `.env` or `.nvmrc` files are modified
-- [ ] Warn when `console.log` is added
-- [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
-- [ ] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
-- [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
-- [ ] [TypeScript] Warn if using `<any>` as return type.
-- [ ] Warn if CSS files were changed
+- [x] Warn if CSS files were changed
 
 
 ## Usage
@@ -140,7 +138,7 @@ import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
 schedule(async() => {
   await taqtileDangerjsPlugin();
-)
+})
 ```
 
 ### For peril
@@ -168,7 +166,7 @@ import taqtileDangerjsPlugin from 'taqtile-dangerjs-plugin'
 
 schedule(async() => {
   await taqtileDangerjsPlugin();
-)
+})
 ```
 ## Changelog
 

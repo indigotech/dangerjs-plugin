@@ -1,11 +1,9 @@
 import * as Faker from 'faker';
-
 import { filesToCheck, node } from './node';
 
 declare const global: any;
 
 describe('Node info', () => {
-
   let warnMock: jest.Mock<any>;
 
   beforeEach(() => {
@@ -104,8 +102,8 @@ describe('Node info', () => {
     it('Should not warn about `console.log` when it was not added to code', async () => {
       global.danger = {
         git: {
-          modified_files: ['any'],
-          created_files: ['any'],
+          modified_files: null,
+          created_files: null,
           diffForFile: jest.fn(() => ({
             added: `
             any text;
@@ -145,8 +143,8 @@ describe('Node info', () => {
     it('Should not warn about `npm install -g` when it was not added to code', async () => {
       global.danger = {
         git: {
-          modified_files: ['any'],
-          created_files: ['any'],
+          modified_files: null,
+          created_files: null,
           diffForFile: jest.fn(() => ({
             added: `
             any text;
