@@ -67,7 +67,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warn when `console.log` is added
 - [ ] Warn when `package.json` was modified and `yarn.lock` or `shrinkwrap` was not
 - [x] Warn if node version is different between .travis.yml, .nvmrc, package.json and README (or just warn if node version has change just in one of these locations)
-- [ ] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
+- [x] At packages.json every package should have its version fixed (do not use ^ or ~), or explicitly set the major and minor versions (ie.: 1.2.x)
 - [ ] [TypeScript] Warn if using `<any>` as return type.
 - [x] Warn if some files/folders were changed/committed:
   - `npm-debug.log`
