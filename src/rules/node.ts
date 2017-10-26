@@ -38,7 +38,7 @@ export let node: Scope = {
 
   /** Warns when 'console.log' is added to code */
   async consoleLog() {
-    if (changedFilesContainsRegex(/console\.log/ig)) {
+    if (await changedFilesContainsRegex(/console\.log/ig)) {
       warn('This PR adds `console.log` to code.');
     }
   },
@@ -124,6 +124,13 @@ export let node: Scope = {
         warn(`This PR has dependency without fixed version, please set at least the major and minor explicitly.`);
       }
 
+    }
+  },
+
+  /** Warns when <any> is used as return type */
+  async typescriptAnyReturn() {
+    if (await changedFilesContainsRegex(/\)(\s|\n)*:(\s|\n)*(any|\w+<any>)(\s|\n)*{/g)) {
+      warn('This PR is using <any> as return type.');
     }
   },
 
