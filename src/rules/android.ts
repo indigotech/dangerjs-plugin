@@ -29,10 +29,19 @@ export let android = {
     }
   },
 
+  /** Warn when hardcoded dimens are found */
   async hardcodedDimens() {
     if (await changedFilesContainsRegex(/(["'])[1-9]+\d*(dp|sp|pt|px|in|mm)\s*\1/ig)) {
       warn(['This PR has a hardcoded dimens. ',
       'Please prefer adding all dimens in a dimens.xml file'].join(''));
+    }
+  },
+
+  /** Warn when hardcoded colors are found */
+  async hardcodedColors() {
+    if (await changedFilesContainsRegex(/(["'])#[0-9a-fA-F]{6,8}\s*\1/ig)) {
+      warn(['This PR has a hardcoded colors. ',
+      'Please prefer adding all colors in a colors.xml file'].join(''));
     }
   },
 

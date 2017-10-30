@@ -139,4 +139,47 @@ describe('Node info', () => {
 
   });
 
+  describe('hardcoded colors', () => {
+
+    it('Should warn if hardcoded colors are found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:textColor="#00FF00"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedColors();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn if hardcoded colors are not found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [`any`],
+          created_files: [``],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:textSize="@dimen/FFAABB"
+                android:lines="23"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedColors();
+
+      expect(global.warn).not.toBeCalled();
+    });
+
+  });
+
 });
