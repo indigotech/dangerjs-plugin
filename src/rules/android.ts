@@ -8,6 +8,8 @@ export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
+const kotlinFile = /\S.kt/;
+
 /**
  * PR rules
  */
@@ -42,6 +44,15 @@ export let android = {
     if (await changedFilesContainsRegex(/(["'])#[0-9a-fA-F]{6,8}\s*\1/ig)) {
       warn(['This PR has a hardcoded colors. ',
       'Please prefer adding all colors in a colors.xml file'].join(''));
+    }
+  },
+
+  /** Warn when findViewById or ButterKnife are used in kotlin */
+  async kotlinBindingView() {
+    if (await changedFilesContainsRegex(/(findViewById)|(butterknife)/ig, [kotlinFile])) {
+      warn(['This PR has a kotlin file using findViewById or butterknife. ',
+      'Please prefer the Kotlin Android Extensions. ',
+      'More info at https://kotlinlang.org/docs/tutorials/android-plugin.html'].join(''));
     }
   },
 
