@@ -77,4 +77,66 @@ describe('Node info', () => {
     });
   });
 
+  describe('hardcoded dimens', () => {
+
+    it('Should warn if hardcoded dp are found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:layout_width="200dp"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedDimens();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn if hardcoded sp are found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [],
+          created_files: [`any`],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:layout_width="200dp"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedDimens();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn if hardcoded dimens are not found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [`any`],
+          created_files: [``],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:textSize="@dimen/xxxxx"
+                android:lines="2"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedDimens();
+
+      expect(global.warn).not.toBeCalled();
+    });
+
+  });
+
 });
