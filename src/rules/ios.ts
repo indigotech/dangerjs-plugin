@@ -28,20 +28,19 @@ export let ios = {
 
         if (hasFileWithPattern(danger.git.modified_files, /Fastfile/)) {
             warn('This PR changes the "Fastfile" file.');
-          }
-      },
+        }
+    },
 
-      /** Warn when `Podfile` was modified and `Podfile.lock` was not */
-      async modifiedPodfileAndNotModifiedPodfileLock() {
+    /** Warn when `Podfile` was modified and `Podfile.lock` was not */
+    async modifiedPodfileAndNotModifiedPodfileLock() {
         const hasFileWithPattern = (array: string[], pattern: RegExp): boolean => {
-          const fileChanged = array.findIndex(file => pattern.test(file)) > -1;
-          return fileChanged;
+            const fileChanged = array.findIndex(file => pattern.test(file)) > -1;
+            return fileChanged;
         };
 
         if (hasFileWithPattern(danger.git.modified_files, /Podfile/)
             && !hasFileWithPattern(danger.git.modified_files, /Podfile.lock/)) {
-          warn('This PR changes the "Podfile" file and did not changed "Podfile.lock".');
+            warn('This PR changes the "Podfile" file and did not changed "Podfile.lock".');
         }
-      },
-
-    };
+    },
+};
