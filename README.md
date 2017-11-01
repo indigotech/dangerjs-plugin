@@ -104,11 +104,11 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 ### Android
 
 - [x] Warn if there are hardcoded dimens different from `0dp` on `.xml` files
-- [ ] Warn if there are hardcoded colors on `.xml` files
+- [x] Warn if there are hardcoded colors on `.xml` files
 - [ ] Warn if there are hardcoded texts on `.xml` files
 - [ ] [Kotlin] Error when `!!` is found (similar to swift forced unwrap when `anything!` is found)
 - [ ] [Kotlin] Warn if using `Any` or `Any?` as return type
-- [ ] [Kotlin] Warn if `ButterKnife` or `findViewById` are found
+- [x] [Kotlin] Warn if `ButterKnife` or `findViewById` are found
 - [ ] Warn if some files/folders were changed/committed:
   - `Manifest.xml`
   - `.gradle`

@@ -23,6 +23,8 @@ describe('Node info', () => {
     global.markdown = undefined;
   });
 
+  const kotlinFile = 'file.kt';
+
   describe('.gradle or manifest.xml', () => {
     it('Should warn when .gradle is modified', async () => {
       global.danger = {
@@ -137,6 +139,128 @@ describe('Node info', () => {
       expect(global.warn).not.toBeCalled();
     });
 
+  });
+
+  describe('hardcoded colors', () => {
+
+    it('Should warn if hardcoded colors are found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:textColor="#00FF00"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedColors();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn if hardcoded colors are not found', async () => {
+      global.danger = {
+        git: {
+          modified_files: [`any`],
+          created_files: [``],
+          diffForFile: jest.fn(() => ({
+            added: `
+              <TextView
+                android:textSize="@dimen/FFAABB"
+                android:lines="23"/>
+            `,
+          })),
+        },
+      };
+
+      await android.hardcodedColors();
+
+      expect(global.warn).not.toBeCalled();
+    });
+
+  });
+
+  describe('kotlin binding view', () => {
+
+    it('Should warn if a kotlin file has findViewById', async () => {
+      global.danger = {
+        git: {
+          modified_files: [],
+          created_files: ['file.kt'],
+          diffForFile: jest.fn(() => ({
+            added: `
+              some text
+              private void bindViews() {
+                titleTextView = (CustomTextView) findViewById(R.id.component_card_icon_number_title);
+              }
+              more text
+            `,
+          })),
+        },
+      };
+
+      await android.kotlinBindingView();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn if a kotlin file has butterknife', async () => {
+      global.danger = {
+        git: {
+          modified_files: [`file.kt`],
+          created_files: [],
+          diffForFile: jest.fn(() => ({
+            added: `
+              import butterknife.BindView;
+              some text
+              ButterKnife.bind(this, root);
+              more text
+            `,
+          })),
+        },
+      };
+
+      await android.kotlinBindingView();
+
+      expect(global.warn).toBeCalled();
+    });
+
+  });
+
+  it('Should warn if a kotlin file has butterknife', async () => {
+    global.danger = {
+      git: {
+        modified_files: [kotlinFile],
+        created_files: ['file.java'],
+        diffForFile: jest.fn((fileName: string) => {
+          if (fileName === kotlinFile) {
+            return {
+              added: `
+                some text
+                more text
+              `,
+            };
+          } else {
+            return {
+              added: `
+              import butterknife.BindView;
+              some text
+              ButterKnife.bind(this, root);
+              more text
+            `,
+            };
+          }
+        }),
+      },
+    };
+
+    await android.kotlinBindingView();
+
+    expect(global.warn).not.toBeCalled();
   });
 
 });
