@@ -86,7 +86,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 ### iOS
 
-- [ ] Warn if some files/folders to be changed/committed like `Cakefile`, `settings.yml.erb`, `Fastfile`
+- [x] Warn if some files/folders to be changed/committed like `Cakefile`, `settings.yml.erb`, `Fastfile`
 - [ ] Warn when `Podfile` was modified and `Podfile.lock` was not
 - [ ] Warn if changes made in Cakefile may 'break' provisionings and sign certificates configurations
 - [ ] Warn when ATS Exception is set in plist
