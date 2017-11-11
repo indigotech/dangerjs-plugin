@@ -33,7 +33,7 @@ describe('Node info', () => {
                 },
             };
 
-            await ios.modifiedGradleOrManifest();
+            await ios.modifiedCakefileOrSettingsYmlOrFastlane();
 
             expect(global.warn).toBeCalled();
         });
@@ -46,7 +46,7 @@ describe('Node info', () => {
                 },
             };
 
-            await ios.modifiedGradleOrManifest();
+            await ios.modifiedCakefileOrSettingsYmlOrFastlane();
 
             expect(global.warn).toBeCalled();
         });
@@ -59,7 +59,7 @@ describe('Node info', () => {
                 },
             };
 
-            await ios.modifiedGradleOrManifest();
+            await ios.modifiedCakefileOrSettingsYmlOrFastlane();
 
             expect(global.warn).toBeCalled();
         });
@@ -72,7 +72,7 @@ describe('Node info', () => {
                 },
             };
 
-            await ios.modifiedGradleOrManifest();
+            await ios.modifiedCakefileOrSettingsYmlOrFastlane();
 
             expect(global.warn).toHaveBeenCalledTimes(3);
         });
@@ -85,7 +85,49 @@ describe('Node info', () => {
                 },
             };
 
-            await ios.modifiedGradleOrManifest();
+            await ios.modifiedCakefileOrSettingsYmlOrFastlane();
+
+            expect(global.warn).not.toBeCalled();
+        });
+    });
+
+    describe('Podfile was modified and Podfile.lock was not', () => {
+
+        it('Should warn when Podfile is modified and Podfile.lock is not', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile', 'any'],
+                    created_files: ['any'],
+                },
+            };
+
+            await ios.modifiedPodfileAndNotModifiedPodfileLock();
+
+            expect(global.warn).toBeCalled();
+        });
+
+        it('Should not warn when Podfile is not modified and Podfile.lock is modified', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile.lock', 'any'],
+                    created_files: ['any'],
+                },
+            };
+
+            await ios.modifiedPodfileAndNotModifiedPodfileLock();
+
+            expect(global.warn).not.toBeCalled();
+        });
+
+        it('Should not warn when Podfile and Podfile.lock are modified', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile', 'Podfile.lock', 'any'],
+                    created_files: ['any'],
+                },
+            };
+
+            await ios.modifiedPodfileAndNotModifiedPodfileLock();
 
             expect(global.warn).not.toBeCalled();
         });
