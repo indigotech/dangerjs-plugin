@@ -87,6 +87,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 - [x] Warn if some files/folders to be changed/committed like `Cakefile`, `settings.yml.erb`, `Fastfile`
 - [X] Warn when `Podfile` was modified and `Podfile.lock` was not
+- [ ] Warn when ATS Exception is set in plist
 - [ ] Warn when Landscape orientation is set in plist
 - [ ] Warn when pod is being loaded from external git repos
 - [ ] Warn if Podfile has pods should not using fixed versions
@@ -112,7 +113,6 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 - [ ] (Platform/Language agnostic) Warn when Amazon Secret Key is hardcoded
 - [ ] (iOS) Warn if changes made in Cakefile may 'break' provisionings and sign certificates configurations
-- [ ] (iOS) Warn when ATS Exception is set in plist
 - [ ] (iOS) Warn when Facebook ID is hardcoded in plist
 - [ ] (iOS) Warn when `TODO` is added
 - [ ] (iOS) Warn when `print(“”)` is added
