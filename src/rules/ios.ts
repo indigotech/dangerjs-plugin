@@ -1,10 +1,13 @@
 import { DangerDSLType } from '../../node_modules/danger/distribution/dsl/DangerDSL';
+import { changedFilesContainsRegex, warnIfFilesChanged } from '../utils';
 declare const danger: DangerDSLType;
 
 export declare function message(message: string): void;
 export declare function warn(message: string): void;
 export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
+
+const plistFile = /\S.plist/;
 
 /**
  * ios rules
@@ -41,6 +44,13 @@ export let ios = {
         if (hasFileWithPattern(danger.git.modified_files, /Podfile/)
             && !hasFileWithPattern(danger.git.modified_files, /Podfile.lock/)) {
             warn('This PR changes the "Podfile" file and did not changed "Podfile.lock".');
+        }
+    },
+
+    /** Warn when ATS exception is found */
+    async atsException() {
+        if (await changedFilesContainsRegex(/.*NSAppTransportSecurity/g), [plistFile]) {
+            warn('ATS Exception found in plist file.');
         }
     },
 };

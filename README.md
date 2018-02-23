@@ -87,7 +87,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 
 - [x] Warn if some files/folders to be changed/committed like `Cakefile`, `settings.yml.erb`, `Fastfile`
 - [X] Warn when `Podfile` was modified and `Podfile.lock` was not
-- [ ] Warn when ATS Exception is set in plist
+- [x] Warn when ATS Exception is set in plist
 - [ ] Warn when Landscape orientation is set in plist
 - [ ] Warn when pod is being loaded from external git repos
 - [ ] Warn if Podfile has pods should not using fixed versions
