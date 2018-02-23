@@ -53,4 +53,11 @@ export let ios = {
             warn('ATS Exception found in plist file.');
         }
     },
+
+    /** Warn when landscape orientation is set */
+    async landscapeOrientation() {
+        if (await changedFilesContainsRegex(/.*UIInterfaceOrientationLandscape/g), [plistFile]) {
+            warn('Landscape orientation is set in plist file.');
+        }
+    },
 };
