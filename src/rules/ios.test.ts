@@ -151,12 +151,12 @@ describe('Node info', () => {
                     })),
                 },
             };
-      
+
             await ios.atsException();
-      
+
             expect(global.warn).toBeCalled();
         });
-        
+
         it('Should warn if landscape orientation is set in plist', async () => {
             global.danger = {
                 git: {
