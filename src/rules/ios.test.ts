@@ -23,6 +23,8 @@ describe('Node info', () => {
         global.markdown = undefined;
     });
 
+    const plistFile = 'file.plist';
+
     describe('Cakefile or settings.yml.erb or Fastfile', () => {
 
         it('Should warn when Cakefile is modified', async () => {
@@ -131,5 +133,49 @@ describe('Node info', () => {
 
             expect(global.warn).not.toBeCalled();
         });
+    });
+
+    describe('plist checks', () => {
+
+        it('Should warn if a plist file has ATS exception', async () => {
+            global.danger = {
+                git: {
+                    modified_files: plistFile,
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            some text
+                            <key>NSAppTransportSecurity</key>
+                            more text
+                        `,
+                    })),
+                },
+            };
+
+            await ios.atsException();
+
+            expect(global.warn).toBeCalled();
+        });
+
+        it('Should warn if landscape orientation is set in plist', async () => {
+            global.danger = {
+                git: {
+                    modified_files: plistFile,
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            some text
+                            <string>UIInterfaceOrientationLandscape</string>
+                            more text
+                        `,
+                    })),
+                },
+            };
+
+            await ios.landscapeOrientation();
+
+            expect(global.warn).toBeCalled();
+        });
+
     });
 });
