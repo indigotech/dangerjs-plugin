@@ -178,4 +178,28 @@ describe('Node info', () => {
         });
 
     });
+
+    describe('podfile checks', () => {
+
+        it('Should warn when pods are loaded from external git repos', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile'],
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            pod 'GoogleAnalytics',      '3.14.0'
+                            pod 'TQ1SDK',               :git => 'https://github.com/tq1/taqtile-sdk-ios.git'
+                            pod 'Firebase/Core',        '4.0.0'
+                        `,
+                    })),
+                },
+            };
+
+            await ios.podFromExternalRepo();
+
+            expect(global.warn).toBeCalled();
+        });
+
+    });
 });
