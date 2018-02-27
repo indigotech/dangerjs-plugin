@@ -178,4 +178,48 @@ describe('Node info', () => {
         });
 
     });
+
+    describe('podfile checks', () => {
+
+        it('Should warn when pods are loaded from external git repos', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile'],
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            pod 'GoogleAnalytics',      '3.14.0'
+                            pod 'TQ1SDK',               :git => 'https://github.com/tq1/taqtile-sdk-ios.git'
+                            pod 'Firebase/Core',        '4.0.0'
+                        `,
+                    })),
+                },
+            };
+
+            await ios.podFromExternalRepo();
+
+            expect(global.warn).toBeCalled();
+        });
+
+        it('Should warn when pods do not have version specified', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile'],
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            pod 'HCSStarRatingView',        '~> 1.5'
+                            pod 'Alamofire',                '4.6.0'
+                            pod 'AlamofireImage',           '3.3.0'
+                        `,
+                    })),
+                },
+            };
+
+            await ios.podWithoutFixedVersion();
+
+            expect(global.warn).toBeCalled();
+        });
+
+    });
 });

@@ -8,6 +8,7 @@ export declare function fail(message: string): void;
 export declare function markdown(message: string): void;
 
 const plistFile = /\S.plist/;
+const podfile = /Podfile/;
 
 /**
  * ios rules
@@ -58,6 +59,20 @@ export let ios = {
     async landscapeOrientation() {
         if (await changedFilesContainsRegex(/.*UIInterfaceOrientationLandscape/g), [plistFile]) {
             warn('Landscape orientation is set in plist file.');
+        }
+    },
+
+    /** Warn when pods are loaded from external git repos */
+    async podFromExternalRepo() {
+        if (await changedFilesContainsRegex(/.*:git/g), [podfile]) {
+            warn('"Podfile" has pods being loaded from external git repos.');
+        }
+    },
+
+    /** Warn when pods don't have version specified */
+    async podWithoutFixedVersion() {
+        if (await changedFilesContainsRegex(/'(?:((~>|>|>=|<|<=) (\d+\.\d+)(\.\d+)?))'/g), [podfile]) {
+            warn('"Podfile" has one or more pods with no version specified.');
         }
     },
 };
