@@ -90,7 +90,7 @@ Also, check [Danger's guide on Phrasing](http://danger.systems/js/usage/culture.
 - [x] Warn when ATS Exception is set in plist
 - [x] Warn when Landscape orientation is set in plist
 - [x] Warn when pod is being loaded from external git repos
-- [ ] Warn if Podfile has pods should not using fixed versions
+- [x] Warn if Podfile has pods should not using fixed versions
 - [ ] [Swift] Warn if forced unwrapping was found
 
 ### Android

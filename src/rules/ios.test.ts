@@ -201,5 +201,25 @@ describe('Node info', () => {
             expect(global.warn).toBeCalled();
         });
 
+        it('Should warn when pods do not have version specified', async () => {
+            global.danger = {
+                git: {
+                    modified_files: ['Podfile'],
+                    created_files: [],
+                    diffForFile: jest.fn(() => ({
+                        added: `
+                            pod 'HCSStarRatingView',        '~> 1.5'
+                            pod 'Alamofire',                '4.6.0'
+                            pod 'AlamofireImage',           '3.3.0'
+                        `,
+                    })),
+                },
+            };
+
+            await ios.podWithoutFixedVersion();
+
+            expect(global.warn).toBeCalled();
+        });
+
     });
 });

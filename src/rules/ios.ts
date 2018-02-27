@@ -68,4 +68,11 @@ export let ios = {
             warn('"Podfile" has pods being loaded from external git repos.');
         }
     },
+
+    /** Warn when pods don't have version specified */
+    async podWithoutFixedVersion() {
+        if (await changedFilesContainsRegex(/'(?:((~>|>|>=|<|<=) (\d+\.\d+)(\.\d+)?))'/g), [podfile]) {
+            warn('"Podfile" has one or more pods with no version specified.');
+        }
+    },
 };
