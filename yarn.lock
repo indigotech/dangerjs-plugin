@@ -43,6 +43,10 @@
   version "19.2.4"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-19.2.4.tgz#543651712535962b7dc615e18e4a381fc2687442"
 
+"@types/node@^10.3.2":
+  version "10.3.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.2.tgz#3840ec6c12556fdda6e0e6d036df853101d732a4"
+
 abab@^1.0.0, abab@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.3.tgz#b81de5f7274ec4e756d797cd834f303642724e5d"
@@ -831,7 +835,7 @@ danger@*:
     chalk "^2.0.0"
     commander "^2.9.0"
     debug "^2.6.0"
-    github "^10.0.0"
+    github "^9.2.0"
     jest-config "^20.0.0"
     jest-environment-node "^20.0.0"
     jest-runtime "^20.0.0"

@@ -1,5 +1,8 @@
 // Provides dev-time type structures for  `danger` - doesn't affect runtime.
+import * as child from 'child_process';
+
 import {DangerDSLType} from '../../node_modules/danger/distribution/dsl/DangerDSL';
+
 declare const danger: DangerDSLType;
 
 export declare function message(message: string): void;
@@ -127,4 +130,9 @@ export let node: Scope = {
     }
   },
 
+  async runNpmAudit() {
+    child.exec('npm audit --json', (error, stdout, stderr) => {
+      warn('dsfsdf' + stdout + stderr + error);
+    });
+  },
 };

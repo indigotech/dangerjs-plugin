@@ -79,5 +79,8 @@
       "\\.snap$",
       "<rootDir>/node_modules/"
     ]
+  },
+  "dependencies": {
+    "@types/node": "^10.3.2"
   }
 }
