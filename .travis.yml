@@ -2,7 +2,7 @@ language: node_js
 dist: trusty
 
 before_install:
-  - npm install -g yarn@`node -pe "require('./package.json').engines.yarn"`
+  - npm install -g yarn@1.3.2
 
 install:
   - yarn install
