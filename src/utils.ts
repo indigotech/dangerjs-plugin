@@ -1,11 +1,14 @@
 // Provides dev-time type structures for  `danger` - doesn't affect runtime.
-import {DangerDSLType} from '../node_modules/danger/distribution/dsl/DangerDSL';
-declare const danger: DangerDSLType;
+// import {DangerDSLType} from '../node_modules/danger/distribution/dsl/DangerDSL';
+// declare const danger: DangerDSLType;
 
-export declare function message(message: string): void;
-export declare function warn(message: string): void;
-export declare function fail(message: string): void;
-export declare function markdown(message: string): void;
+// export declare function message(message: string): void;
+// export declare function warn(message: string): void;
+// export declare function fail(message: string): void;
+// export declare function markdown(message: string): void;
+
+import { danger, warn, markdown } from "danger"
+
 // adapted from https://stackoverflow.com/a/37324915/429521
 const intersect = (xs: FilesType[], ys: string[]): string[] =>
   ys.filter(
