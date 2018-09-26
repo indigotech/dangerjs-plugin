@@ -1,11 +1,13 @@
-import { DangerDSLType } from '../../node_modules/danger/distribution/dsl/DangerDSL';
+// import { DangerDSLType } from '../../node_modules/danger/distribution/dsl/DangerDSL';
 import { changedFilesContainsRegex, warnIfFilesChanged } from '../utils';
-declare const danger: DangerDSLType;
+// declare const danger: DangerDSLType;
 
-export declare function message(message: string): void;
-export declare function warn(message: string): void;
-export declare function fail(message: string): void;
-export declare function markdown(message: string): void;
+// export declare function message(message: string): void;
+// export declare function warn(message: string): void;
+// export declare function fail(message: string): void;
+// export declare function markdown(message: string): void;
+
+import { danger, warn, markdown } from "danger"
 
 const plistFile = /\S.plist/;
 const podfile = /Podfile/;

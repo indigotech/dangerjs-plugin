@@ -1,11 +1,13 @@
 // Provides dev-time type structures for  `danger` - doesn't affect runtime.
-import {DangerDSLType} from '../node_modules/danger/distribution/dsl/DangerDSL';
+// import {DangerDSLType} from '../node_modules/danger/distribution/dsl/DangerDSL';
 
-declare const danger: DangerDSLType;
-export declare function message(message: string): void;
-export declare function warn(message: string): void;
-export declare function fail(message: string): void;
-export declare function markdown(message: string): void;
+// declare const danger: DangerDSLType;
+// export declare function message(message: string): void;
+// export declare function warn(message: string): void;
+// export declare function fail(message: string): void;
+// export declare function markdown(message: string): void;
+
+import { danger, warn, markdown } from "danger"
 
 // Taqtile rules
 import { Rule, Scope } from './rule.type';
