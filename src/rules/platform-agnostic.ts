@@ -10,6 +10,8 @@ export declare function markdown(message: string): void;
 import { Scope } from '../rule.type';
 import { warnIfFilesChanged } from '../utils';
 
+import * as npmCheck from 'npm-check';
+
 export const filesToCheck = [
   'Dangerfile',
   '.gitignore',
@@ -23,6 +25,10 @@ export const filesToCheck = [
  * Platform Agnostic rules
  */
 export let platformAgnostic: Scope = {
+  /** Message with updates available for dependencies */
+  async npmCheck() {
+    await npmCheck({emoji:false, skipUnused: true, ignoreDev: true}).then(currentState => message(JSON.stringify(currentState.get('packages'))));
+  },
 
   /** Warns when key config files have been modified */
   async shouldNotHaveBeenChanged() {
