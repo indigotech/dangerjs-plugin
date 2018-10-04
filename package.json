@@ -79,8 +79,5 @@
       "\\.snap$",
       "<rootDir>/node_modules/"
     ]
-  },
-  "dependencies": {
-    "npm-check": "^5.9.0"
   }
 }
