@@ -102,8 +102,8 @@ describe('Node info', () => {
     it('Should not warn about `console.log` when it was not added to code', async () => {
       global.danger = {
         git: {
-          modified_files: null,
-          created_files: null,
+          modified_files: ['any'],
+          created_files: ['any'],
           diffForFile: jest.fn(() => ({
             added: `
             any text;
@@ -114,7 +114,7 @@ describe('Node info', () => {
 
       await node.consoleLog();
 
-      expect(global.fail).not.toBeCalled();
+      expect(global.warn).not.toBeCalled();
 
     });
   });
@@ -333,4 +333,66 @@ describe('Node info', () => {
 
   });
 
+  describe('Typescript return any', () => {
+
+    it('Should warn about using <any> as a function return type', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['file.ts'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            test(x): any {
+
+            }
+            more text`,
+          })),
+        },
+      };
+
+      await node.typescriptAnyReturn();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should warn about using Promise<any> as a return type', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['file.ts'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            test(x): Promise<any> {
+
+            }
+            more text`,
+          })),
+        },
+      };
+
+      await node.typescriptAnyReturn();
+
+      expect(global.warn).toBeCalled();
+    });
+
+    it('Should not warn about using <any> as return type', async () => {
+      global.danger = {
+        git: {
+          modified_files: ['file.ts'],
+          created_files: ['any'],
+          diffForFile: jest.fn(() => ({
+            added: `
+            test(x): string {
+
+            }
+            more text`,
+          })),
+        },
+      };
+
+      await node.typescriptAnyReturn();
+
+      expect(global.warn).not.toBeCalled();
+    });
+  });
 });
